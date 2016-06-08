@@ -1,0 +1,38 @@
+grammar de.htwg.mdsd.playmorphiamodelling.PlayMorphiaModelling with org.eclipse.xtext.common.Terminals
+
+generate playMorphiaModelling "http://www.htwg.de/mdsd/playmorphiamodelling/PlayMorphiaModelling"
+
+Domainmodel:
+	(elements+=AbstractElement)*;
+
+PackageDeclaration:
+    'package' name=QualifiedName '{'
+        (elements+=AbstractElement)*
+    '}';
+
+AbstractElement:
+    PackageDeclaration | Type | Import;
+
+MorphiaModel:
+	'morphiamodel' name=ID '{' 
+	(imports+=Import)*
+	(attributes+=Attribute)* 
+	'}';
+
+Attribute:
+	(many?='many')? name=ID ':' type=[Type];
+
+Type:
+	DataType | MorphiaModel;
+
+DataType:
+	'datatype' name=ID;
+	
+Import:
+    'import' importedNamespace=QualifiedNameWithWildcard;
+	
+QualifiedNameWithWildcard:
+    QualifiedName '.*'?;
+    
+QualifiedName:
+    ID ('.' ID)*;
